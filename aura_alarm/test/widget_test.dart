@@ -1,9 +1,5 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// UI smoke test for the World Clock app.
+// Verifies presence of core static widgets and labels used in the app.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,20 +7,36 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:aura_alarm/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('WorldClockApp UI smoke test', (WidgetTester tester) async {
+    // Build the app
+    await tester.pumpWidget(const WorldClockApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // AppBar title
+    expect(find.text('WORLD CLOCK'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Section header
+    expect(find.text('Local Time'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Static city tiles
+    expect(find.text('New York, USA'), findsOneWidget);
+    expect(find.text('London, UK'), findsOneWidget);
+    expect(find.text('Dubai, UAE'), findsOneWidget);
+    expect(find.text('Tokyo, Japan'), findsOneWidget);
+
+    // FAB present
+    expect(find.byIcon(Icons.add), findsOneWidget);
+
+    // Bottom navigation items present
+    expect(find.text('Clock'), findsOneWidget);
+    expect(find.text('Alarm'), findsOneWidget);
+    expect(find.text('Timer'), findsOneWidget);
+    expect(find.text('Stopwatch'), findsOneWidget);
+
+    // Tap some bottom navigation items to ensure taps are wired (no crash)
+    await tester.tap(find.text('Alarm'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Timer'));
+    await tester.pumpAndSettle();
   });
 }
